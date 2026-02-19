@@ -9,9 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Só executa se o workflow CI tiver passado
-    needs: [build]
-
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
