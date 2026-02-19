@@ -171,7 +171,7 @@ export default function Process() {
               <p className="text-[#A0A0A0] leading-relaxed">
                 Porque quando você entende o processo, você entende o valor. Cada minuto de trabalho
                 manual, cada ajuste de parâmetros, cada verificação de qualidade. É isso que diferencia
-                uma peça "impressa" de uma peça <em>feita</em>. É por isso que projetos com a DevMaker3D
+                uma peça &ldquo;impressa&rdquo; de uma peça <em>feita</em>. É por isso que projetos com a DevMaker3D
                 entregam resultados que superam expectativas.
               </p>
             </div>

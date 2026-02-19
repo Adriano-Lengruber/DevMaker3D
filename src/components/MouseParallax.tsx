@@ -2,12 +2,6 @@
 
 import { useEffect, useRef } from 'react'
 
-interface ParallaxElement {
-  element: HTMLElement
-  speed: number
-  direction: 'x' | 'y' | 'both'
-}
-
 export default function MouseParallax() {
   const containerRef = useRef<HTMLDivElement>(null)
 

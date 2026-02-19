@@ -79,7 +79,7 @@ export default function Materials() {
             <span className="text-[#F57C00]"> cada propósito.</span>
           </h2>
           <p className="text-[#A0A0A0] text-lg max-w-2xl mx-auto">
-            Não existe material "melhor" ou "pior". Existe o material certo para cada aplicação.
+            Não existe material &ldquo;melhor&rdquo; ou &ldquo;pior&rdquo;. Existe o material certo para cada aplicação.
             Escolhemos baseado em funcionalidade, estética e orçamento.
           </p>
         </motion.div>

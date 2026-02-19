@@ -65,7 +65,7 @@ export default function Testimonials() {
             >
               <Quote className="w-8 h-8 text-[#F57C00]/30 mb-4" />
               <p className="text-[#A0A0A0] leading-relaxed mb-6">
-                "{testimonial.quote}"
+                &ldquo;{testimonial.quote}&rdquo;
               </p>
               <div className="border-t border-[#333333] pt-4">
                 <p className="font-[family-name:var(--font-montserrat)] font-bold text-white">

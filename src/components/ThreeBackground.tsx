@@ -6,7 +6,7 @@ import { OrbitControls, Float, MeshDistortMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 function FloatingGeometry() {
-  const meshRef = useRef<THREE.Mesh>(null!)
+  const meshRef = useRef<THREE.Mesh>(null)
   
   // Animação suave de rotação
   useFrame((state) => {
@@ -37,7 +37,7 @@ function FloatingGeometry() {
 
 function FloatingParticles() {
   const count = 50
-  const mesh = useRef<THREE.Points>(null!)
+  const mesh = useRef<THREE.Points>(null)
   
   const particles = useMemo(() => {
     const temp = new Float32Array(count * 3)

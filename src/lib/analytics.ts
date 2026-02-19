@@ -32,7 +32,7 @@ export const event = ({
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
-      value: value,
+      value,
     })
   }
 }
@@ -143,7 +143,7 @@ export const initScrollDepthTracking = () => {
   if (typeof window === 'undefined') return
 
   let maxScrollDepth = 0
-  let scrollTracked = {
+  const scrollTracked = {
     25: false,
     50: false,
     75: false,

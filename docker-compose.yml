@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  devmaker3d:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devmaker3d
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

@@ -50,7 +50,7 @@ export default function Philosophy() {
             <span className="text-[#F57C00]">Vendemos precisão, paciência e criação.</span>
           </h2>
           <p className="text-[#A0A0A0] text-lg max-w-2xl mx-auto">
-            O mercado de impressão 3D está saturado de quem oferece "o menor preço".
+            O mercado de impressão 3D está saturado de quem oferece &ldquo;o menor preço&rdquo;.
             Nós oferecemos o maior valor: atenção aos detalhes, transparência no processo e resultado que supera expectativas.
           </p>
         </motion.div>
@@ -92,8 +92,8 @@ export default function Philosophy() {
           className="mt-16 text-center"
         >
           <p className="font-[family-name:var(--font-montserrat)] font-bold text-2xl md:text-3xl text-white italic max-w-3xl mx-auto">
-            "Nada nasce pronto. Tudo é construído,{' '}
-            <span className="text-[#F57C00]">camada por camada</span>."
+            &ldquo;Nada nasce pronto. Tudo é construído,{' '}
+            <span className="text-[#F57C00]">camada por camada</span>.&rdquo;
           </p>
         </motion.blockquote>
       </div>

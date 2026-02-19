@@ -1,3 +1,4 @@
+import React from 'react'
 import type { Metadata } from "next"
 import { JetBrains_Mono, Inter, Montserrat } from "next/font/google"
 import { generateSEOMetadata, localBusinessSchema, servicesSchema, materialsSchema } from "@/components/shared/SEO"

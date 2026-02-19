@@ -4,7 +4,7 @@ describe('utils', () => {
   describe('cn', () => {
     it('combines class names correctly', () => {
       expect(cn('class1', 'class2')).toBe('class1 class2')
-      expect(cn('class1', false && 'class2', 'class3')).toBe('class1 class3')
+      expect(cn('class1', false && 'class2', 'class3')).toBe('class1 class3') // eslint-disable-line no-constant-binary-expression
       expect(cn('class1', undefined, null, 'class2')).toBe('class1 class2')
     })
   })

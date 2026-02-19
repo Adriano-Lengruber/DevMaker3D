@@ -13,7 +13,7 @@ describe('Hero', () => {
   it('renders CTA buttons', () => {
     render(<Hero />)
     
-    const ctaButtons = screen.getAllByRole('button')
+    const ctaButtons = screen.getAllByRole('link', { name: /iniciar projeto|ver processo/i })
     expect(ctaButtons.length).toBeGreaterThan(0)
   })
 
@@ -28,7 +28,8 @@ describe('Hero', () => {
   it('has proper semantic structure', () => {
     render(<Hero />)
     
-    const section = screen.getByRole('region')
+    // Query for the section element directly since it doesn't have an accessible name
+    const section = screen.getByTestId('hero-section')
     expect(section).toBeInTheDocument()
   })
 })

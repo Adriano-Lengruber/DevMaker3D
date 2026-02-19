@@ -42,7 +42,7 @@ async function sendContactEmail(data: z.infer<typeof contactFormSchema>, file?: 
   // Aqui você implementaria o envio real de email
   // Por exemplo, usando Resend, SendGrid, ou outro serviço
   
-  console.log('📧 Email de contato enviado:', {
+  console.warn('📧 Email de contato enviado:', {
     to: process.env.RESEND_TO_EMAIL || 'contato@devmaker3d.com.br',
     from: process.env.RESEND_FROM_EMAIL || 'contato@devmaker3d.com.br',
     subject: `Novo contato - ${data.subject}`,
@@ -62,6 +62,19 @@ async function sendContactEmail(data: z.infer<typeof contactFormSchema>, file?: 
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting check
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown'
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'Muitas requisições. Tente novamente em alguns minutos.' 
+        },
+        { status: 429 }
+      )
+    }
+    
     const { data, file } = await parseFormData(request)
     
     // Validação dos dados
