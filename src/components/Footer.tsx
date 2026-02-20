@@ -152,7 +152,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#A0A0A0]">
           <p>
-            © {new Date().getFullYear()} DevMaker3D - By Adriano Lengruber. Todos os direitos reservados.
+            © {new Date().getFullYear()} DevMaker3D ❤️ - By Adriano Lengruber. Todos os direitos reservados.
           </p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-[#F57C00] transition-colors">
