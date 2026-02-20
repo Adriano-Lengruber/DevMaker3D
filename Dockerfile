@@ -23,8 +23,17 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Copia apenas o necessário
-COPY --from=builder /app ./
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+# Para o modo standalone, precisamos dos arquivos estáticos no diretório _next
+# O Next.js espera que os arquivos estáticos estejam em _next/static/
+RUN mkdir -p _next && cp -r .next/static _next/static
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "HOST=0.0.0.0 node .next/standalone/server.js"]
+# COMANDO CORRIGIDO PARA STANDALONE - executar do diretório correto
+WORKDIR /app
+CMD ["sh", "-c", "HOST=0.0.0.0 PORT=3000 node server.js"]

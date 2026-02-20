@@ -15,6 +15,13 @@ services:
     networks:
       - nginx-proxy_default
     restart: unless-stopped
+    # Garantir que o container tenha tempo suficiente para iniciar
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   nginx-proxy_default:
