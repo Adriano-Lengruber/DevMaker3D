@@ -1,0 +1,89 @@
+name: 🚀 CI + Deploy (Produção)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    name: 🔍 CI - Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependências
+        run: npm ci
+
+      - name: 🧪 Executar testes
+        run: npm run test:ci
+
+      - name: 🏗️ Build da aplicação
+        run: npm run build
+
+  deploy:
+    name: 🚀 Deploy VPS
+    needs: ci
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: 🚀 Deploy para VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          timeout: 60s
+          command_timeout: 30m
+          script_stop: true
+          script: |
+            set -e
+            
+            echo "🔄 Iniciando deploy automatizado..."
+            cd /home/adriano/DevMaker3D_02_26
+            
+            echo "📥 Atualizando código..."
+            git fetch origin
+            git reset --hard origin/main
+            
+            echo "🧹 Removendo container antigo (se existir)..."
+            docker rm -f devmaker3d 2>/dev/null || true
+            
+            echo "🐳 Subindo nova versão..."
+            docker compose down 2>/dev/null || true
+            docker compose build --no-cache
+            docker compose up -d
+            
+            echo "⏱️ Aguardando inicialização..."
+            sleep 15
+            
+            echo "🔍 Verificando status..."
+            if docker ps --format "table {{.Names}}\t{{.Status}}" | grep -q "devmaker3d.*Up"; then
+              echo "✅ Container está rodando!"
+              
+              echo "🧪 Testando aplicação..."
+              if curl -f -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "200\|301\|302"; then
+                echo "✅ Aplicação respondendo corretamente!"
+              else
+                echo "⚠️  Aplicação não respondeu ao teste, mas container está rodando"
+              fi
+              
+              echo "🧹 Limpando imagens antigas..."
+              docker image prune -f >/dev/null 2>&1
+              
+              echo "🎉 Deploy concluído com sucesso!"
+            else
+              echo "❌ Container não está rodando! Verifique os logs:"
+              docker logs devmaker3d --tail 20
+              exit 1
+            fi
