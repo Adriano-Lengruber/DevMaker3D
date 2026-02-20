@@ -21,7 +21,19 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
+            set -e
+
+            echo "📂 Acessando diretório..."
             cd /home/adriano/DevMaker3D_02_26
-            git pull origin main
+
+            echo "🔄 Resetando alterações locais..."
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "🐳 Parando containers..."
             docker compose down
+
+            echo "🔨 Subindo containers atualizados..."
             docker compose up -d --build
+
+            echo "✅ Deploy finalizado com sucesso!"
