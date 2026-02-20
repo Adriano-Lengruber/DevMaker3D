@@ -40,7 +40,7 @@ export default function Header() {
           <img
             src="/Logo White.svg"
             alt="DevMaker3D"
-            className="h-10 md:h-12 w-auto"
+            className="h-7.5 md:h-9 w-auto"
           />
         </a>
 

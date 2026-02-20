@@ -36,7 +36,7 @@ export default function Footer() {
 
       <div className="container-custom">
         {/* Main Footer Content */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-8 mb-16">
           {/* Brand */}
           <div className="lg:col-span-2">
             <motion.div
@@ -46,10 +46,11 @@ export default function Footer() {
               transition={{ duration: 0.8 }}
             >
               <a href="#" className="flex items-center gap-2 mb-4">
-                <Layers className="w-8 h-8 text-[#F57C00]" />
-                <span className="font-[family-name:var(--font-montserrat)] font-bold text-xl text-white">
-                  DevMaker<span className="text-[#F57C00]">3D</span>
-                </span>
+                <img
+                  src="/Logo White.svg"
+                  alt="DevMaker3D"
+                  className="h-7.5 md:h-9 w-auto"
+                />
               </a>
               <p className="text-[#A0A0A0] mb-6 max-w-sm">
                 Tecnologia com alma. Transformamos ideias abstratas em objetos tangíveis
@@ -117,16 +118,20 @@ export default function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="font-[family-name:var(--font-montserrat)] font-bold text-white mb-4">
               Contato
             </h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <Mail className="w-4 h-4 text-[#F57C00] mt-0.5" />
-                <span className="text-[#A0A0A0] text-sm">
+              <li className="flex items-start gap-2 min-w-0">
+                <Mail className="w-4 h-4 text-[#F57C00] mt-0.5 flex-shrink-0" />
+                <a 
+                  href="mailto:contato@adriano-lengruber.com" 
+                  className="text-[#A0A0A0] text-xs sm:text-sm hover:text-[#F57C00] transition-colors break-all"
+                  style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
+                >
                   contato@adriano-lengruber.com
-                </span>
+                </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-[#F57C00] mt-0.5" />
@@ -144,25 +149,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Materials Bar */}
-        <div className="py-6 border-y border-[#333333] mb-8">
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
-            <span className="text-sm text-[#A0A0A0]">Materiais:</span>
-            {footerLinks.materials.map((material) => (
-              <span
-                key={material}
-                className="px-3 py-1 bg-[#1A1A1A] rounded text-sm text-[#A0A0A0]"
-              >
-                {material}
-              </span>
-            ))}
-          </div>
-        </div>
-
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#A0A0A0]">
           <p>
-            © {new Date().getFullYear()} DevMaker3D. Todos os direitos reservados.
+            © {new Date().getFullYear()} DevMaker3D - By Adriano Lengruber. Todos os direitos reservados.
           </p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-[#F57C00] transition-colors">

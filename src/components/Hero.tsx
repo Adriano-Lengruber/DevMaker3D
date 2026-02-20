@@ -55,7 +55,10 @@ export default function Hero() {
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#F57C00]/10 rounded-full blur-3xl" />
 
       {/* Content */}
-      <div className="relative z-20 container-custom text-center pt-28 md:pt-32">
+      <div className="relative z-20 container-custom text-center">
+        {/* Spacer para navbar - visível em telas pequenas */}
+        <div className="h-48 sm:h-40 md:h-48 lg:h-56"></div>
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,7 +97,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 lg:mb-20"
         >
           <a
             href="#contact"
@@ -115,12 +118,12 @@ export default function Hero() {
         {/* Stats - REMOVIDO temporariamente para focar na landing page clean */}
       </div>
 
-      {/* Scroll Indicator - Reposicionado para não ficar atrás do conteúdo */}
+      {/* Scroll Indicator - Posicionamento responsivo */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-30"
+        className="absolute bottom-8 lg:bottom-12 left-1/2 -translate-x-1/2 z-30"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}

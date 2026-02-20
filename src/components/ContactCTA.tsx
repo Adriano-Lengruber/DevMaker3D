@@ -68,8 +68,7 @@ export default function ContactCTA() {
                   <div>
                     <h4 className="font-medium text-white mb-1">Endereço</h4>
                     <p className="text-[#A0A0A0]">
-                      Rua Principal, 123<br />
-                      Centro, Itaperuna/RJ
+                      Itaperuna/RJ
                     </p>
                   </div>
                 </div>
@@ -78,7 +77,7 @@ export default function ContactCTA() {
                   <Phone className="w-5 h-5 text-[#F57C00] mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="font-medium text-white mb-1">Telefone</h4>
-                    <p className="text-[#A0A0A0]">(22) 99999-9999</p>
+                    <p className="text-[#A0A0A0]">(21) 98330-0779</p>
                   </div>
                 </div>
 
@@ -86,7 +85,7 @@ export default function ContactCTA() {
                   <Mail className="w-5 h-5 text-[#F57C00] mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="font-medium text-white mb-1">Email</h4>
-                    <p className="text-[#A0A0A0]">contato@devmaker3d.com.br</p>
+                    <p className="text-[#A0A0A0] break-all">contato@adriano-lengruber.com</p>
                   </div>
                 </div>
               </div>
@@ -95,17 +94,15 @@ export default function ContactCTA() {
             <div className="bg-[#1A1A1A]/80 backdrop-blur-sm border border-[#333333] rounded-2xl p-8">
               <h3 className="text-xl font-bold text-white mb-4">Horário de atendimento</h3>
               <div className="space-y-2 text-[#A0A0A0]">
-                <p>Segunda a Sexta: 8h às 18h</p>
-                <p>Sábado: 8h às 12h</p>
-                <p>Domingo: Fechado</p>
+                <p>Seg a Sex - 10h às 17h</p>
               </div>
             </div>
 
             <div className="bg-[#1A1A1A]/80 backdrop-blur-sm border border-[#333333] rounded-2xl p-8">
               <h3 className="text-xl font-bold text-white mb-4">Tempo de resposta</h3>
               <p className="text-[#A0A0A0]">
-                Orçamentos em até 24 horas<br />
-                Projetos iniciados em até 48 horas
+                Orçamento até 2 dias<br />
+                Projetos iniciados em até 4 dias
               </p>
             </div>
           </motion.div>
