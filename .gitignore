@@ -61,7 +61,6 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # Package lock files (usamos pnpm)
-package-lock.json
 yarn.lock
 
 # Build artifacts
