@@ -125,19 +125,19 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-[#F57C00] mt-0.5" />
                 <span className="text-[#A0A0A0] text-sm">
-                  contato@devmaker3d.com.br
+                  contato@adriano-lengruber.com
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-[#F57C00] mt-0.5" />
                 <span className="text-[#A0A0A0] text-sm">
-                  (11) 99999-9999
+                  (21) 98330-0779
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#F57C00] mt-0.5" />
                 <span className="text-[#A0A0A0] text-sm">
-                  São Paulo, SP - Brasil
+                  Itaperuna/RJ
                 </span>
               </li>
             </ul>
