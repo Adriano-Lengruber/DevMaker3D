@@ -25,6 +25,16 @@ const materials = [
     useCase: 'Peças funcionais, adaptadores, suportes',
   },
   {
+    icon: Gem,
+    name: 'NYLON',
+    category: 'Alta Performance',
+    description: 'Resistência superior com flexibilidade controlada. Ideal para engrenagens, engates e peças que precisam de durabilidade extrema.',
+    characteristics: ['Extrema durabilidade', 'Auto-lubrificante', 'Resistente a químicos', 'Alta resistência mecânica'],
+    temperature: '240-260°C',
+    strength: 'Very High',
+    useCase: 'Engrenagens, engates, peças móveis, componentes industriais',
+  },
+  {
     icon: Wind,
     name: 'TPU',
     category: 'Flexível',
@@ -191,7 +201,7 @@ export default function Materials() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-[#0F0F0F] text-center">
-                <div className="text-2xl font-bold text-[#F57C00] mb-1">5+</div>
+                <div className="text-2xl font-bold text-[#F57C00] mb-1">6+</div>
                 <div className="text-xs text-[#A0A0A0]">Materiais</div>
               </div>
               <div className="p-4 rounded-lg bg-[#0F0F0F] text-center">
