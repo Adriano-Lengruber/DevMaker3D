@@ -1,0 +1,16 @@
+{
+  "name": "DevMaker3D",
+  "short_name": "DevMaker3D",
+  "description": "Transformando ideias em realidade digital com tecnologia de ponta",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
