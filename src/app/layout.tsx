@@ -2,6 +2,7 @@ import React from 'react'
 import type { Metadata } from "next"
 import { JetBrains_Mono, Inter, Montserrat } from "next/font/google"
 import { generateSEOMetadata, localBusinessSchema, servicesSchema, materialsSchema } from "@/components/shared/SEO"
+import { AuthProvider } from "@/components/providers/AuthProvider"
 import "./globals.css"
 
 const jetbrainsMono = JetBrains_Mono({
@@ -96,7 +97,9 @@ export default function RootLayout({
       <body
         className={`${jetbrainsMono.variable} ${inter.variable} ${montserrat.variable} antialiased bg-[#0F0F0F] text-white`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
