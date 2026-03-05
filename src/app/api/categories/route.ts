@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, getServerSession } from "next/server"
 import prisma from "@/lib/prisma"
-import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 
 // GET /api/categories - Listar categorias
