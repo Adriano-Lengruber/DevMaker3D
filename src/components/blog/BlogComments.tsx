@@ -137,7 +137,7 @@ export function BlogComments({ postId, initialComments, postSlug }: BlogComments
               {comment.author.image ? (
                 <img
                   src={comment.author.image}
-                  alt={comment.author.name}
+                  alt={comment.author.name || ''}
                   className="w-10 h-10 rounded-full grayscale group-hover:grayscale-0 transition-all duration-500 border border-[#333333]"
                 />
               ) : (

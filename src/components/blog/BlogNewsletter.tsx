@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, CheckCircle2, Sparkles } from 'lucide-react'
+import { Send, Mail, CheckCircle2 } from 'lucide-react'
 
 export function BlogNewsletter() {
   const [email, setEmail] = useState('')
@@ -72,7 +72,7 @@ export function BlogNewsletter() {
             <p className="text-[10px] text-center text-gray-600 font-mono uppercase tracking-tighter mt-4">
               Sem SPAM. Apenas engenharia pura.
             </p>
-          form>
+          </form>
         ) : (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
