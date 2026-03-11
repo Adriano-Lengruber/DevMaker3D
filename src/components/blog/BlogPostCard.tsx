@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Clock, User, MessageCircle, Heart } from 'lucide-react'
+import { Calendar, Clock, User, MessageCircle, Heart, ArrowRight } from 'lucide-react'
 
 interface BlogPost {
   id: string
@@ -10,14 +10,15 @@ interface BlogPost {
   coverImage: string | null
   readTime: number
   views: number
-  publishedAt: Date
+  publishedAt: Date | null
   author: {
-    name: string
+    name: string | null
     image: string | null
   }
   categories: Array<{
     name: string
     slug: string
+    color: string
   }>
   tags: Array<{
     name: string
@@ -34,98 +35,85 @@ interface BlogPostCardProps {
 }
 
 export function BlogPostCard({ post }: BlogPostCardProps) {
+  const publishedDate = post.publishedAt ? new Date(post.publishedAt) : new Date()
+
   return (
-    <article className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800 hover:border-orange-500 transition-all duration-300 group">
-      {/* Imagem de capa */}
-      {post.coverImage && (
-        <div className="aspect-video overflow-hidden">
+    <article className="blog-card group flex flex-col h-full animate-fadeIn">
+      {/* Imagem de capa com Overlay */}
+      <div className="relative aspect-[16/10] overflow-hidden">
+        {post.coverImage ? (
           <Image
             src={post.coverImage}
             alt={post.title}
-            width={800}
-            height={450}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
-        </div>
-      )}
-
-      <div className="p-6">
-        {/* Categorias */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          {post.categories.map((category) => (
-            <Link
-              key={category.slug}
-              href={`/blog/categoria/${category.slug}`}
-              className="inline-block px-2 py-1 text-xs font-medium bg-orange-500/10 text-orange-400 rounded-full hover:bg-orange-500/20 transition-colors"
+        ) : (
+          <div className="w-full h-full bg-[#252525] flex items-center justify-center">
+            <span className="text-gray-600 font-mono text-xs">NO_SIGNAL_3D</span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-transparent to-transparent opacity-60" />
+        
+        {/* Categoria Float */}
+        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          {post.categories.map((cat) => (
+            <span 
+              key={cat.slug}
+              className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#F57C00] text-white blog-glow-orange"
             >
-              {category.name}
-            </Link>
+              {cat.name}
+            </span>
           ))}
         </div>
+      </div>
 
-        {/* Título e resumo */}
-        <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">
+      <div className="p-8 flex flex-col flex-grow">
+        {/* Meta Header */}
+        <div className="flex items-center space-x-4 mb-6 text-xs text-gray-500 font-medium tracking-wide">
+          <div className="flex items-center">
+            <User className="w-3.5 h-3.5 mr-1.5 text-[#F57C00]" />
+            <span>{post.author.name || 'Admin'}</span>
+          </div>
+          <div className="flex items-center">
+            <Calendar className="w-3.5 h-3.5 mr-1.5 text-[#F57C00]" />
+            <span>{publishedDate.toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' })}</span>
+          </div>
+        </div>
+
+        {/* Título */}
+        <h3 className="text-2xl font-bold text-white mb-4 leading-tight group-hover:text-[#F57C00] transition-colors duration-300">
           <Link href={`/blog/${post.slug}`}>
             {post.title}
           </Link>
-        </h2>
+        </h3>
 
-        <p className="text-gray-300 mb-4 line-clamp-3">
+        {/* Excerpt */}
+        <p className="text-gray-400 font-light text-sm leading-relaxed mb-8 line-clamp-3">
           {post.excerpt}
         </p>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {post.tags.map((tag) => (
-            <Link
-              key={tag.slug}
-              href={`/blog/tag/${tag.slug}`}
-              className="text-sm text-gray-400 hover:text-orange-400 transition-colors"
-            >
-              #{tag.name}
-            </Link>
-          ))}
-        </div>
-
-        {/* Meta informações */}
-        <div className="flex items-center justify-between text-sm text-gray-400">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <User className="h-4 w-4" />
-              <span>{post.author.name}</span>
+        {/* Footer info & Community Actions */}
+        <div className="mt-auto pt-6 border-t border-[#333333] flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center text-gray-400 group/icon cursor-pointer">
+              <Heart className="w-4 h-4 mr-1.5 transition-colors group-hover/icon:text-red-500" />
+              <span className="text-xs font-mono">{post._count.reactions}</span>
             </div>
-            
-            <div className="flex items-center space-x-1">
-              <Calendar className="h-4 w-4" />
-              <span>{new Date(post.publishedAt).toLocaleDateString('pt-BR')}</span>
-            </div>
-            
-            <div className="flex items-center space-x-1">
-              <Clock className="h-4 w-4" />
-              <span>{post.readTime} min</span>
+            <div className="flex items-center text-gray-400 group/icon cursor-pointer">
+              <MessageCircle className="w-4 h-4 mr-1.5 transition-colors group-hover/icon:text-[#F57C00]" />
+              <span className="text-xs font-mono">{post._count.comments}</span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <MessageCircle className="h-4 w-4" />
-              <span>{post._count.comments}</span>
-            </div>
-            
-            <div className="flex items-center space-x-1">
-              <Heart className="h-4 w-4" />
-              <span>{post._count.reactions}</span>
-            </div>
-          </div>
+          <Link 
+            href={`/blog/${post.slug}`}
+            className="flex items-center text-xs font-bold uppercase tracking-widest text-white hover:text-[#F57C00] transition-colors group/link"
+          >
+            Read Post
+            <ArrowRight className="ml-2 w-3.5 h-3.5 transform transition-transform group-hover/link:translate-x-1" />
+          </Link>
         </div>
-
-        {/* Botão de leitura */}
-        <Link
-          href={`/blog/${post.slug}`}
-          className="inline-block mt-4 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
-        >
-          Ler mais →
-        </Link>
       </div>
     </article>
   )

@@ -173,7 +173,19 @@
   @apply bg-red-600 hover:bg-red-700 text-white;
 }
 
-/* Animações */
+/* ─── Blog Specific ───────────────────────────────────────── */
+.blog-card {
+  @apply bg-[#1A1A1A] border border-[#333333] rounded-2xl overflow-hidden transition-all duration-500 hover:border-[#F57C00]/40;
+}
+
+.blog-glow-orange {
+  filter: drop-shadow(0 0 8px rgba(245, 124, 0, 0.3));
+}
+
+.text-gradient-orange {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-[#F57C00] to-[#F57C00];
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

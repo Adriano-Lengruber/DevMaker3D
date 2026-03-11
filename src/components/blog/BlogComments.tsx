@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MessageCircle, Heart, ThumbsUp, Laugh, Wow, Sad, Angry, User } from 'lucide-react'
+import { MessageCircle, Heart, User, Send, Share2 } from 'lucide-react'
 
 interface Comment {
   id: string
@@ -12,10 +12,6 @@ interface Comment {
     name: string
     image: string | null
   }
-  reactions: Array<{
-    type: string
-    userId: string
-  }>
   _count: {
     reactions: number
   }
@@ -27,20 +23,10 @@ interface BlogCommentsProps {
   postSlug: string
 }
 
-const REACTIONS = [
-  { type: 'like', emoji: '👍', label: 'Curtir' },
-  { type: 'love', emoji: '❤️', label: 'Amei' },
-  { type: 'laugh', emoji: '😂', label: 'Engraçado' },
-  { type: 'wow', emoji: '😮', label: 'Surpreso' },
-  { type: 'sad', emoji: '😢', label: 'Triste' },
-  { type: 'angry', emoji: '😠', label: 'Irritado' }
-]
-
 export function BlogComments({ postId, initialComments, postSlug }: BlogCommentsProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [newComment, setNewComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [userReactions, setUserReactions] = useState<Record<string, string>>({})
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,161 +36,126 @@ export function BlogComments({ postId, initialComments, postSlug }: BlogComments
     try {
       const response = await fetch('/api/comments', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: newComment,
-          postId
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newComment, postId })
       })
 
       if (response.ok) {
         const createdComment = await response.json()
         setComments([createdComment, ...comments])
         setNewComment('')
-        alert('Comentário enviado com sucesso! Ele será revisado antes de ser publicado.')
-      } else {
-        alert('Erro ao enviar comentário. Tente novamente.')
       }
     } catch (error) {
       console.error('Error submitting comment:', error)
-      alert('Erro ao enviar comentário.')
     } finally {
       setIsSubmitting(false)
-    }
-  }
-
-  const handleReaction = async (commentId: string, reactionType: string) => {
-    try {
-      const response = await fetch('/api/reactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: reactionType,
-          commentId
-        })
-      })
-
-      if (response.ok) {
-        // Atualizar reações localmente
-        const result = await response.json()
-        if (result.message === 'Reaction removed') {
-          setUserReactions(prev => {
-            const newReactions = { ...prev }
-            delete newReactions[commentId]
-            return newReactions
-          })
-        } else {
-          setUserReactions(prev => ({
-            ...prev,
-            [commentId]: reactionType
-          }))
-        }
-      }
-    } catch (error) {
-      console.error('Error handling reaction:', error)
     }
   }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: 'numeric',
-      month: 'long',
-      year: 'numeric',
+      month: 'short',
       hour: '2-digit',
       minute: '2-digit'
     })
   }
 
   return (
-    <div className="mt-12">
-      <h3 className="text-2xl font-bold text-white mb-8 flex items-center">
-        <MessageCircle className="h-6 w-6 mr-2 text-orange-500" />
-        Comentários ({comments.length})
-      </h3>
+    <div className="animate-fadeIn">
+      <div className="flex items-center justify-between mb-10">
+        <h3 className="text-xl font-bold text-white flex items-center">
+          <MessageCircle className="h-5 w-5 mr-3 text-[#F57C00]" />
+          Community Feed ({comments.length})
+        </h3>
+        <div className="h-px flex-grow mx-8 bg-gradient-to-r from-[#333333] to-transparent opacity-50" />
+      </div>
 
-      {/* Formulário de comentário */}
-      <form onSubmit={handleSubmitComment} className="mb-8 p-6 bg-gray-900 rounded-lg border border-gray-800">
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Deixe seu comentário..."
-          rows={4}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
-          required
-        />
-        
-        <div className="flex justify-end mt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting || !newComment.trim()}
-            className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isSubmitting ? 'Enviando...' : 'Enviar Comentário'}
-          </button>
+      {/* Input de Elite */}
+      <form onSubmit={handleSubmitComment} className="glass rounded-2xl p-6 border border-[#333333] mb-12 focus-within:border-[#F57C00]/30 transition-all">
+        <div className="flex space-x-4">
+          <div className="w-10 h-10 rounded-full bg-[#252525] border border-[#333333] flex items-center justify-center">
+             <User className="w-5 h-5 text-gray-600" />
+          </div>
+          <div className="flex-grow">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Join the conversation... What's on your mind?"
+              rows={3}
+              className="w-full bg-transparent border-none text-white placeholder-gray-500 text-sm focus:ring-0 resize-none p-0"
+              required
+            />
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#333333]">
+               <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+                 Markdown Supported
+               </div>
+               <button
+                type="submit"
+                disabled={isSubmitting || !newComment.trim()}
+                className="flex items-center space-x-2 px-6 py-2 bg-[#F57C00] text-white rounded-xl hover:bg-[#FF8C00] disabled:opacity-50 transition-all font-bold text-xs uppercase tracking-widest blog-glow-orange"
+              >
+                {isSubmitting ? 'Transmitting...' : 'Dispatch'}
+                <Send className="w-3.5 h-3.5 ml-2" />
+              </button>
+            </div>
+          </div>
         </div>
       </form>
 
-      {/* Lista de comentários */}
+      {/* Social Thread */}
       <div className="space-y-6">
         {comments.map((comment) => (
-          <div key={comment.id} className="comment-card">
-            <div className="comment-author">
+          <div key={comment.id} className="glass rounded-2xl p-6 border border-[#333333] group hover:border-[#F57C00]/20 transition-all duration-500">
+            <div className="flex items-start space-x-4">
               {comment.author.image ? (
                 <img
                   src={comment.author.image}
                   alt={comment.author.name}
-                  className="comment-author-avatar"
+                  className="w-10 h-10 rounded-full grayscale group-hover:grayscale-0 transition-all duration-500 border border-[#333333]"
                 />
               ) : (
-                <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
-                  <User className="h-4 w-4 text-gray-400" />
+                <div className="w-10 h-10 bg-[#252525] rounded-full flex items-center justify-center border border-[#333333]">
+                  <User className="h-5 w-5 text-gray-600" />
                 </div>
               )}
               
-              <span className="comment-author-name">{comment.author.name}</span>
-              <span className="comment-date">{formatDate(comment.createdAt)}</span>
-            </div>
+              <div className="flex-grow">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                     <span className="text-sm font-bold text-white">{comment.author.name}</span>
+                     <span className="w-1 h-1 bg-[#333333] rounded-full" />
+                     <span className="text-[10px] font-mono text-gray-500 uppercase">{formatDate(comment.createdAt)}</span>
+                  </div>
+                  <Share2 className="w-3.5 h-3.5 text-gray-600 cursor-pointer hover:text-white transition-colors" />
+                </div>
 
-            <div className="comment-content mb-4">
-              {comment.content}
-            </div>
+                <div className="text-sm text-gray-400 font-light leading-relaxed mb-4">
+                  {comment.content}
+                </div>
 
-            {/* Reações */}
-            <div className="flex items-center space-x-2">
-              {REACTIONS.map((reaction) => {
-                const isActive = userReactions[comment.id] === reaction.type
-                return (
-                  <button
-                    key={reaction.type}
-                    onClick={() => handleReaction(comment.id, reaction.type)}
-                    className={`reaction-button ${
-                      isActive ? 'active' : ''
-                    }`}
-                    title={reaction.label}
-                  >
-                    <span className="emoji">{reaction.emoji}</span>
-                    <span className="text-sm">
-                      {comment.reactions.filter(r => r.type === reaction.type).length}
-                    </span>
-                  </button>
-                )
-              })}
+                <div className="flex items-center space-x-4">
+                   <button className="flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-[#252525] hover:bg-red-500/10 text-gray-500 hover:text-red-500 transition-all">
+                      <Heart className="w-3.5 h-3.5" />
+                      <span className="text-[10px] font-bold font-mono">{comment._count.reactions}</span>
+                   </button>
+                   <button className="text-[10px] font-bold text-gray-600 hover:text-white uppercase tracking-widest">
+                      Reply
+                   </button>
+                </div>
+              </div>
             </div>
           </div>
         ))}
 
         {comments.length === 0 && (
-          <div className="text-center py-12">
-            <MessageCircle className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <h4 className="text-lg font-semibold text-gray-300 mb-2">
-              Seja o primeiro a comentar!
+          <div className="text-center py-20 bg-[#1A1A1A]/30 rounded-3xl border border-dashed border-[#333333]">
+            <MessageCircle className="h-10 w-10 text-gray-700 mx-auto mb-4" />
+            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">
+              The silence is heavy
             </h4>
-            <p className="text-gray-400">
-              Compartilhe suas ideias e experiências sobre este post.
+            <p className="text-xs text-gray-600">
+              Be the first to initiate contact through the community feed.
             </p>
           </div>
         )}

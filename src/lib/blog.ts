@@ -60,7 +60,9 @@ export async function getBlogPosts(options?: {
             select: {
               id: true,
               name: true,
-              image: true
+              image: true,
+              role: true,
+              bio: true
             }
           },
           categories: true,
@@ -197,7 +199,8 @@ export async function getBlogPostBySlug(slug: string) {
             id: true,
             name: true,
             image: true,
-            bio: true
+            bio: true,
+            role: true
           }
         },
         categories: true,

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Calendar, Clock, User, Eye, Heart, MessageCircle } from 'lucide-react'
+import { Calendar, Clock, User, Eye, Heart, MessageCircle, Share2, Bookmark } from 'lucide-react'
 
 interface BlogPost {
   id: string
@@ -8,11 +8,12 @@ interface BlogPost {
   coverImage: string | null
   readTime: number
   views: number
-  publishedAt: Date
+  publishedAt: Date | null
   author: {
-    name: string
+    name: string | null
     image: string | null
     bio: string | null
+    role: string | null
   }
   categories: Array<{
     name: string
@@ -33,101 +34,112 @@ interface BlogPostContentProps {
 }
 
 export function BlogPostContent({ post }: BlogPostContentProps) {
+  const publishedDate = post.publishedAt ? new Date(post.publishedAt) : new Date()
+
   return (
-    <article className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
-      {/* Imagem de capa */}
-      {post.coverImage && (
-        <div className="aspect-video overflow-hidden">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            width={1200}
-            height={675}
-            className="w-full h-full object-cover"
-            priority
-          />
-        </div>
-      )}
-
-      <div className="p-8">
-        {/* Meta informações */}
-        <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-400">
-          <div className="flex items-center space-x-1">
-            <User className="h-4 w-4" />
-            <span>{post.author.name}</span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date(post.publishedAt).toLocaleDateString('pt-BR', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            })}</span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <Clock className="h-4 w-4" />
-            <span>{post.readTime} min de leitura</span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <Eye className="h-4 w-4" />
-            <span>{post.views} visualizações</span>
-          </div>
-        </div>
-
-        {/* Categorias */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {post.categories.map((category) => (
-            <span
-              key={category.slug}
-              className="inline-block px-3 py-1 text-sm font-medium bg-orange-500/10 text-orange-400 rounded-full"
+    <article className="animate-fadeIn">
+      {/* Post Header / Hero */}
+      <header className="mb-12">
+        <div className="flex flex-wrap gap-3 mb-8">
+          {post.categories.map((cat) => (
+            <span 
+              key={cat.slug}
+              className="px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#F57C00]/10 text-[#F57C00] border border-[#F57C00]/20"
             >
-              {category.name}
+              {cat.name}
             </span>
           ))}
         </div>
 
-        {/* Título */}
-        <h1 className="text-4xl font-bold text-white mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-[1.1] tracking-tight">
           {post.title}
         </h1>
 
-        {/* Conteúdo */}
-        <div 
-          className="prose prose-invert prose-orange max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <div className="flex flex-wrap items-center gap-8 py-6 border-y border-[#333333] text-sm text-gray-500 font-medium tracking-wide">
+          <div className="flex items-center space-x-3">
+             {post.author.image && (
+               <img src={post.author.image} className="w-6 h-6 rounded-full grayscale" alt="" />
+             )}
+             <span className="text-white">{post.author.name}</span>
+          </div>
+          
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2 text-[#F57C00]" />
+            <span>{publishedDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          </div>
+          
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2 text-[#F57C00]" />
+            <span>{post.readTime} min read</span>
+          </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-8 pt-8 border-t border-gray-800">
-          {post.tags.map((tag) => (
-            <a
-              key={tag.slug}
-              href={`/blog/tag/${tag.slug}`}
-              className="inline-block px-3 py-1 text-sm bg-gray-800 text-gray-300 rounded-full hover:bg-orange-500/20 hover:text-orange-400 transition-colors"
-            >
-              #{tag.name}
-            </a>
-          ))}
-        </div>
-
-        {/* Estatísticas */}
-        <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-800">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1 text-gray-400">
-              <MessageCircle className="h-4 w-4" />
-              <span>{post._count.comments} comentários</span>
-            </div>
-            
-            <div className="flex items-center space-x-1 text-gray-400">
-              <Heart className="h-4 w-4" />
-              <span>{post._count.reactions} reações</span>
-            </div>
+          <div className="flex items-center ml-auto space-x-6">
+             <div className="flex items-center">
+               <Eye className="w-4 h-4 mr-2 text-gray-600" />
+               <span className="font-mono text-xs">{post.views}</span>
+             </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Hero Image */}
+      {post.coverImage && (
+        <div className="relative aspect-[21/9] rounded-3xl overflow-hidden mb-16 border border-[#333333]">
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
+        </div>
+      )}
+
+      {/* Content Area */}
+      <div 
+        className="prose prose-invert prose-orange max-w-none 
+                   prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6
+                   prose-p:text-gray-400 prose-p:text-lg prose-p:leading-relaxed prose-p:font-light
+                   prose-strong:text-white prose-strong:font-bold
+                   prose-img:rounded-3xl prose-img:border prose-img:border-[#333333]
+                   prose-code:text-[#F57C00] prose-code:bg-[#1A1A1A] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md
+                   prose-a:text-[#F57C00] prose-a:no-underline hover:prose-a:underline"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+
+      {/* Post Footer Actions */}
+      <footer className="mt-20 pt-12 border-t border-[#333333]">
+        <div className="flex flex-wrap items-center justify-between gap-8">
+           <div className="flex items-center space-x-4">
+              <button className="flex items-center space-x-2 px-6 py-3 bg-[#1A1A1A] border border-[#333333] rounded-2xl hover:border-[#F57C00]/50 transition-all group">
+                <Heart className="w-5 h-5 text-gray-500 group-hover:text-red-500 transition-colors" />
+                <span className="text-sm font-bold text-white">{post._count.reactions}</span>
+                <span className="text-xs text-gray-500 font-medium">Reactions</span>
+              </button>
+              
+              <button className="p-3 bg-[#1A1A1A] border border-[#333333] rounded-2xl hover:border-[#F57C00]/50 transition-all text-gray-500 hover:text-white">
+                <Share2 className="w-5 h-5" />
+              </button>
+
+              <button className="p-3 bg-[#1A1A1A] border border-[#333333] rounded-2xl hover:border-[#F57C00]/50 transition-all text-gray-500 hover:text-white">
+                <Bookmark className="w-5 h-5" />
+              </button>
+           </div>
+
+           <div className="flex flex-wrap gap-2">
+             {post.tags.map((tag) => (
+               <a
+                 key={tag.slug}
+                 href={`/blog/tag/${tag.slug}`}
+                 className="text-xs font-mono text-gray-500 hover:text-[#F57C00] transition-colors"
+               >
+                 #{tag.name}
+               </a>
+             ))}
+           </div>
+        </div>
+      </footer>
     </article>
   )
 }
