@@ -41,12 +41,12 @@ export default function Header() {
         // Skeleton para evitar hydration mismatch
         <div className="container-custom flex items-center justify-between">
           <div className="h-8 md:h-9 w-auto bg-[#333] rounded animate-pulse" />
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
               <div key={item.name} className="h-4 w-16 bg-[#333] rounded animate-pulse" />
             ))}
           </nav>
-          <div className="hidden md:block h-10 w-32 bg-[#333] rounded animate-pulse" />
+          <div className="hidden lg:block h-10 w-32 bg-[#333] rounded animate-pulse" />
         </div>
       ) : (
         <div className="container-custom flex items-center justify-between">
@@ -60,12 +60,12 @@ export default function Header() {
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-8">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm text-[#A0A0A0] hover:text-white transition-colors relative group"
+                className="text-sm text-[#A0A0A0] hover:text-white transition-colors relative group whitespace-nowrap"
               >
                 {item.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#F57C00] transition-all duration-300 group-hover:w-full" />
@@ -76,7 +76,7 @@ export default function Header() {
           {/* CTA Button */}
           <a
             href="#contact"
-            className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 bg-[#F57C00] text-white font-medium rounded text-sm hover:bg-[#FF9500] transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,124,0,0.4)]"
+            className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-[#F57C00] text-white font-medium rounded text-sm hover:bg-[#FF9500] transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,124,0,0.4)] whitespace-nowrap"
           >
             Solicitar Orçamento
           </a>
@@ -84,7 +84,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-white"
+            className="lg:hidden p-2 text-white"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -99,7 +99,7 @@ export default function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden glass border-t border-[#333333]"
+              className="lg:hidden glass border-t border-[#333333]"
             >
               <nav className="flex flex-col py-4 container-custom">
                 {navItems.map((item) => (
