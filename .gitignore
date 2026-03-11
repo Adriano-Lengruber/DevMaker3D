@@ -45,6 +45,12 @@ next-env.d.ts
 
 # Logs
 logs/
+server_logs.txt
+logs.txt
+
+# SQLite database
+*.db
+*.db-journal
 *.log
 
 # Docker

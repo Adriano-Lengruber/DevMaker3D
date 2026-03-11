@@ -7,6 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
@@ -42,7 +43,7 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  role          Role      @default(USER)
+  role          String    @default("USER")
   bio           String?
   website       String?
   twitter       String?
@@ -136,7 +137,7 @@ model Comment {
 
 model Reaction {
   id        String     @id @default(cuid())
-  type      ReactionType
+  type      String
   createdAt DateTime   @default(now())
   
   postId    String?
@@ -148,19 +149,4 @@ model Reaction {
   
   @@unique([userId, postId, commentId, type])
   @@map("reactions")
-}
-
-enum Role {
-  USER
-  ADMIN
-  EDITOR
-}
-
-enum ReactionType {
-  LIKE
-  LOVE
-  LAUGH
-  WOW
-  SAD
-  ANGRY
 }
