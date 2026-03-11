@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Search, Tag, Folder, TrendingUp } from 'lucide-react'
+import { BlogNewsletter } from './BlogNewsletter'
 
 interface BlogSidebarProps {
   categories?: Array<{
@@ -22,6 +23,9 @@ interface BlogSidebarProps {
 export function BlogSidebar({ categories = [], tags = [], popularPosts = [] }: BlogSidebarProps) {
   return (
     <div className="space-y-10 animate-fadeIn">
+      {/* Newsletter */}
+      <BlogNewsletter />
+
       {/* Busca */}
       <div className="glass rounded-2xl p-6 border border-[#333333]">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-4 flex items-center">

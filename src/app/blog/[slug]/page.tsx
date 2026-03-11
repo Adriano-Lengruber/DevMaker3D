@@ -3,12 +3,25 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogComments } from '@/components/blog/BlogComments'
+import { BlogNewsletter } from '@/components/blog/BlogNewsletter'
+import { generateSEOMetadata } from '@/components/shared/SEO'
 import { getBlogPostBySlug, incrementPostViews } from '@/lib/blog'
 
 interface BlogPostPageProps {
   params: {
     slug: string
   }
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps) {
+  const post = await getBlogPostBySlug(params.slug)
+  if (!post) return {}
+
+  return generateSEOMetadata({
+    title: post.title,
+    description: post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>/g, ''),
+    ogImage: post.coverImage || '/og-image.jpg',
+  })
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -35,6 +48,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <BlogPostContent post={post as any} />
               
               <div className="mt-20">
+                <BlogNewsletter />
+              </div>
+
+              <div className="mt-20 pt-20 border-t border-[#333333]">
                 <BlogComments 
                   postId={post.id} 
                   initialComments={post.comments as any} 

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { MessageCircle, Heart, User, Send, Share2 } from 'lucide-react'
+import { useSession, signIn } from 'next-auth/react'
+import { MessageCircle, Heart, User, Send, Share2, Lock, ArrowRight } from 'lucide-react'
 
 interface Comment {
   id: string
@@ -9,7 +10,7 @@ interface Comment {
   createdAt: string
   author: {
     id: string
-    name: string
+    name: string | null
     image: string | null
   }
   _count: {
@@ -24,13 +25,14 @@ interface BlogCommentsProps {
 }
 
 export function BlogComments({ postId, initialComments, postSlug }: BlogCommentsProps) {
+  const { data: session } = useSession()
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [newComment, setNewComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newComment.trim()) return
+    if (!newComment.trim() || !session) return
 
     setIsSubmitting(true)
     try {
@@ -56,8 +58,7 @@ export function BlogComments({ postId, initialComments, postSlug }: BlogComments
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: 'numeric',
       month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric'
     })
   }
 
@@ -71,41 +72,66 @@ export function BlogComments({ postId, initialComments, postSlug }: BlogComments
         <div className="h-px flex-grow mx-8 bg-gradient-to-r from-[#333333] to-transparent opacity-50" />
       </div>
 
-      {/* Input de Elite */}
-      <form onSubmit={handleSubmitComment} className="glass rounded-2xl p-6 border border-[#333333] mb-12 focus-within:border-[#F57C00]/30 transition-all">
-        <div className="flex space-x-4">
-          <div className="w-10 h-10 rounded-full bg-[#252525] border border-[#333333] flex items-center justify-center">
-             <User className="w-5 h-5 text-gray-600" />
-          </div>
-          <div className="flex-grow">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Join the conversation... What's on your mind?"
-              rows={3}
-              className="w-full bg-transparent border-none text-white placeholder-gray-500 text-sm focus:ring-0 resize-none p-0"
-              required
-            />
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#333333]">
-               <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                 Markdown Supported
-               </div>
-               <button
-                type="submit"
-                disabled={isSubmitting || !newComment.trim()}
-                className="flex items-center space-x-2 px-6 py-2 bg-[#F57C00] text-white rounded-xl hover:bg-[#FF8C00] disabled:opacity-50 transition-all font-bold text-xs uppercase tracking-widest blog-glow-orange"
-              >
-                {isSubmitting ? 'Transmitting...' : 'Dispatch'}
-                <Send className="w-3.5 h-3.5 ml-2" />
-              </button>
+      {/* Input de Elite ou Call to Action */}
+      {session ? (
+        <form onSubmit={handleSubmitComment} className="glass rounded-2xl p-6 border border-[#333333] mb-12 focus-within:border-[#F57C00]/30 transition-all">
+          <div className="flex space-x-4">
+            <div className="w-10 h-10 rounded-full bg-[#252525] border border-[#333333] flex items-center justify-center overflow-hidden">
+               {session.user?.image ? (
+                 <img src={session.user.image} alt={session.user.name || ''} className="w-full h-full object-cover" />
+               ) : (
+                 <User className="w-5 h-5 text-gray-600" />
+               )}
+            </div>
+            <div className="flex-grow">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder={`Hey ${session.user?.name?.split(' ')[0]}, what's on your mind?`}
+                rows={3}
+                className="w-full bg-transparent border-none text-white placeholder-gray-500 text-sm focus:ring-0 resize-none p-0"
+                required
+              />
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#333333]">
+                 <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+                   Markdown Supported
+                 </div>
+                 <button
+                  type="submit"
+                  disabled={isSubmitting || !newComment.trim()}
+                  className="flex items-center space-x-2 px-6 py-2 bg-[#F57C00] text-white rounded-xl hover:bg-[#FF8C00] disabled:opacity-50 transition-all font-bold text-xs uppercase tracking-widest blog-glow-orange"
+                >
+                  {isSubmitting ? 'Transmitting...' : 'Dispatch'}
+                  <Send className="w-3.5 h-3.5 ml-2" />
+                </button>
+              </div>
             </div>
           </div>
+        </form>
+      ) : (
+        <div className="glass rounded-2xl p-8 border border-[#333333] mb-12 flex flex-col items-center text-center relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#F57C00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <div className="w-14 h-14 rounded-2xl bg-[#F57C00]/10 flex items-center justify-center mb-6 border border-[#F57C00]/20 shadow-[0_0_20px_rgba(245,124,0,0.1)]">
+            <Lock className="w-6 h-6 text-[#F57C00]" />
+          </div>
+          <h4 className="text-xl font-bold text-white mb-2 font-[family-name:var(--font-montserrat)]">Join the Discussion</h4>
+          <p className="text-sm text-gray-400 max-w-sm mb-8 font-light italic">
+            "Knowledge logic is incomplete without community peer-review."
+          </p>
+          <button 
+            onClick={() => signIn()}
+            className="group/auth relative flex items-center justify-center gap-3 px-8 py-3 bg-[#1A1A1A] border border-[#333333] text-white rounded-xl hover:border-[#F57C00]/50 transition-all duration-300 font-bold text-xs uppercase tracking-widest overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[#F57C00]/5 translate-x-full group-hover/auth:translate-x-0 transition-transform duration-500" />
+            Initialize Identity
+            <ArrowRight className="w-4 h-4 group-hover/auth:translate-x-1 transition-transform" />
+          </button>
         </div>
-      </form>
+      )}
 
       {/* Social Thread */}
       <div className="space-y-6">
-        {comments.map((comment) => (
+        {comments.map((comment: Comment) => (
           <div key={comment.id} className="glass rounded-2xl p-6 border border-[#333333] group hover:border-[#F57C00]/20 transition-all duration-500">
             <div className="flex items-start space-x-4">
               {comment.author.image ? (

@@ -2,7 +2,13 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { BlogSidebar } from '@/components/blog/BlogSidebar'
+import { generateSEOMetadata } from '@/components/shared/SEO'
 import { getBlogPosts, getBlogCategories, getBlogTags, getPopularBlogPosts } from '@/lib/blog'
+
+export const metadata = generateSEOMetadata({
+  title: 'Blog DevMaker3D | Impressão 3D, Engenharia e Arte',
+  description: 'Fique por dentro das novidades da impressão 3D, guias de engenharia e tutoriais de fabricação digital na DevMaker3D.',
+})
 
 export default async function BlogPage() {
   const { posts, pagination } = await getBlogPosts()
