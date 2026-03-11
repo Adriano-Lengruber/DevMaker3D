@@ -1,7 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ShoppingBag, Box, Download, ArrowRight, Star, Layers, Cpu, CreditCard } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ShoppingBag, 
+  Box, 
+  Download, 
+  ArrowRight, 
+  Star, 
+  Layers, 
+  Cpu, 
+  CreditCard,
+  ChevronRight,
+  X,
+  Activity,
+  ShieldCheck 
+} from 'lucide-react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -53,6 +67,30 @@ const CATEGORIES = [
 ];
 
 export default function MarketplacePage() {
+  const [cart, setCart] = useState<any[]>([]);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success'>('idle');
+
+  const addToCart = (product: any) => {
+    setCart([...cart, product]);
+  };
+
+  const total = cart.reduce((acc, item) => {
+    const priceValue = parseFloat(item.price.replace('R$ ', '').replace(',', '.'));
+    return acc + priceValue;
+  }, 0);
+
+  const handlePayment = () => {
+    setPaymentStatus('processing');
+    setTimeout(() => {
+      setPaymentStatus('success');
+      setTimeout(() => {
+        setIsCheckoutOpen(false);
+        setCart([]);
+        setPaymentStatus('idle');
+      }, 2000);
+    }, 3000);
+  };
   return (
     <main className="min-h-screen bg-[#0A0A0A]">
       <Header />
@@ -121,9 +159,12 @@ export default function MarketplacePage() {
                     </span>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-8 px-4">
-                    <button className="w-full py-3 bg-[#F57C00] text-white rounded-xl text-xs uppercase font-bold tracking-widest blog-glow-orange flex items-center justify-center gap-2">
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="w-full py-3 bg-[#F57C00] text-white rounded-xl text-xs uppercase font-bold tracking-widest blog-glow-orange flex items-center justify-center gap-2"
+                    >
                        {product.type === 'Digital' ? <Download className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
-                       Adquirir Agora
+                       Adicionar à Fila
                     </button>
                   </div>
                 </div>
@@ -189,6 +230,110 @@ export default function MarketplacePage() {
       </section>
 
       <Footer />
+
+      {/* Floating Cart UI */}
+      <AnimatePresence>
+        {cart.length > 0 && !isCheckoutOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            className="fixed bottom-10 right-10 z-50"
+          >
+             <button 
+               onClick={() => setIsCheckoutOpen(true)}
+               className="flex items-center gap-4 bg-[#F57C00] text-white p-4 rounded-2xl shadow-[0_0_40px_rgba(245,124,0,0.5)] blog-glow-orange group transition-all hover:scale-105"
+             >
+                <div className="relative">
+                   <ShoppingBag className="w-6 h-6" />
+                   <span className="absolute -top-2 -right-2 bg-white text-[#F57C00] text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                      {cart.length}
+                   </span>
+                </div>
+                <div className="text-left pr-4">
+                   <p className="text-[10px] uppercase font-bold text-white/70">Fila de Projetos</p>
+                   <p className="text-sm font-bold font-mono">R$ {total.toFixed(2)}</p>
+                </div>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Checkout Modal */}
+      <AnimatePresence>
+         {isCheckoutOpen && (
+           <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsCheckoutOpen(false)}
+                className="absolute inset-0 bg-black/90 backdrop-blur-md" 
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="relative w-full max-w-lg glass border border-[#333333] rounded-[40px] p-10 overflow-hidden"
+              >
+                 <button 
+                    onClick={() => setIsCheckoutOpen(false)}
+                    className="absolute top-6 right-6 p-2 text-gray-500 hover:text-white transition-colors"
+                 >
+                    <X className="w-6 h-6" />
+                 </button>
+
+                 <div className="text-center mb-10">
+                    <div className="w-16 h-16 bg-[#1A1A1A] border border-[#F57C00]/30 rounded-2xl flex items-center justify-center mb-6 mx-auto blog-glow-orange">
+                       <CreditCard className="w-8 h-8 text-[#F57C00]" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white uppercase tracking-tighter">Finalizar Blueprint</h3>
+                    <p className="text-gray-500 text-sm mt-2">Transação de alta performance em ambiente seguro.</p>
+                 </div>
+
+                 <div className="space-y-4 mb-10">
+                    <div className="flex justify-between items-center text-sm text-gray-400 mb-2 font-mono uppercase tracking-widest">
+                       <span>Item</span>
+                       <span>Preço</span>
+                    </div>
+                    <div className="max-h-32 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                       {cart.map((item, i) => (
+                         <div key={i} className="flex justify-between items-center text-white">
+                            <span className="text-sm font-medium">{item.name}</span>
+                            <span className="text-sm font-bold font-mono text-[#F57C00]">{item.price}</span>
+                         </div>
+                       ))}
+                    </div>
+                    <div className="border-t border-[#333333] pt-6 flex justify-between items-center">
+                       <span className="text-lg font-bold text-white uppercase tracking-tighter">Total do Contrato</span>
+                       <span className="text-2xl font-bold font-mono text-white">R$ {total.toFixed(2)}</span>
+                    </div>
+                 </div>
+
+                 <button 
+                   disabled={paymentStatus !== 'idle'}
+                   onClick={handlePayment}
+                   className="w-full py-5 bg-[#F57C00] text-white rounded-2xl font-bold uppercase tracking-widest blog-glow-orange hover:bg-[#FF8C00] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                 >
+                    {paymentStatus === 'idle' && 'Processar Pagamento Neural'}
+                    {paymentStatus === 'processing' && (
+                       <div className="flex items-center justify-center gap-3">
+                          <Activity className="w-5 h-5 animate-spin" />
+                          Autenticando na Rede...
+                       </div>
+                    )}
+                    {paymentStatus === 'success' && 'Sincronização Concluída!'}
+                 </button>
+
+                 <div className="mt-6 flex items-center justify-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-white">Encrypted Transaction</span>
+                 </div>
+              </motion.div>
+           </div>
+         )}
+      </AnimatePresence>
     </main>
   );
 }

@@ -340,6 +340,14 @@ export default function NexusEngine() {
                    >
                      Validar & Solicitar Fabricação
                    </button>
+                   {status === 'success' && (
+                      <Link 
+                        href="/dashboard"
+                        className="w-full py-3 bg-[#1A1A1A] text-gray-400 border border-[#333333] rounded-xl font-bold text-[10px] uppercase tracking-widest hover:text-[#F57C00] hover:border-[#F57C00]/50 transition-all text-center flex items-center justify-center gap-2"
+                      >
+                         Salvar no Command Center
+                      </Link>
+                   )}
                    <p className="text-[10px] text-gray-500 text-center uppercase tracking-tighter">O valor é uma estimativa técnica preliminar.</p>
                 </div>
              </div>

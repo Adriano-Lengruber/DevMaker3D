@@ -134,10 +134,10 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-4">
             {session ? (
               <div className="flex items-center gap-4 border-l border-[#333333] pl-4">
-                 <div className="text-right">
-                    <p className="text-[10px] text-gray-500 uppercase font-mono">Operator</p>
+                 <Link href="/dashboard" className="text-right hover:opacity-80 transition-opacity group">
+                    <p className="text-[10px] text-gray-500 uppercase font-mono group-hover:text-[#F57C00] transition-colors">Command Center</p>
                     <p className="text-xs font-bold text-white">{session.user?.name}</p>
-                 </div>
+                 </Link>
                  <button 
                    onClick={() => signOut()}
                    className="w-8 h-8 rounded-full border border-[#333333] bg-[#1A1A1A] flex items-center justify-center hover:border-red-500/50 transition-colors group"
