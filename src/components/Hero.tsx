@@ -75,6 +75,9 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="font-[family-name:var(--font-montserrat)] font-extrabold text-4xl md:text-6xl lg:text-7xl text-white leading-tight mb-6"
         >
+          <span className="block text-sm md:text-base uppercase tracking-[0.3em] text-[#F57C00] mb-4 font-mono">
+            Impressão 3D de Precisão & Engenharia
+          </span>
           Do Código à Matéria:{' '}
           <span className="text-[#F57C00] text-glow">Materializamos</span>
           <br />

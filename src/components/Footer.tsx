@@ -149,8 +149,17 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* SEO Technical Context */}
+        <div className="mt-16 pt-8 border-t border-[#333333] hidden md:block">
+           <p className="text-[10px] text-[#333333] text-center leading-relaxed">
+             DevMaker3D - Especialistas em Impressão 3D Profissional, Prototipagem Rápida e Engenharia Digital. 
+             Atendimento especializado em Itaperuna, Rio de Janeiro e todo o Norte Fluminense. 
+             Transformamos arquivos digitais (STL, OBJ, STEP) em soluções físicas reais com alta precisão e acabamento técnico.
+           </p>
+        </div>
+
         {/* Bottom */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#A0A0A0]">
+        <div className="flex flex-col md:flex-row items-center justify-between mt-8 gap-4 text-sm text-[#A0A0A0]">
           <p>
             © {new Date().getFullYear()} DevMaker3D ❤️ - By Adriano Lengruber. Todos os direitos reservados.
           </p>

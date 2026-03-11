@@ -45,9 +45,9 @@ export default function Philosophy() {
             Nossa Filosofia
           </span>
           <h2 className="font-[family-name:var(--font-montserrat)] font-bold text-3xl md:text-5xl text-white mt-4 mb-6">
-            Não vendemos plástico derretido.
+            Nossos Serviços de Impressão 3D:
             <br />
-            <span className="text-[#F57C00]">Vendemos precisão, paciência e criação.</span>
+            <span className="text-[#F57C00]">Vendemos precisão, não apenas plástico.</span>
           </h2>
           <p className="text-[#A0A0A0] text-lg max-w-2xl mx-auto">
             O mercado de impressão 3D está saturado de quem oferece &ldquo;o menor preço&rdquo;.

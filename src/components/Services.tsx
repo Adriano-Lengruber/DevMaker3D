@@ -61,8 +61,7 @@ export default function Services() {
             Serviços
           </span>
           <h2 className="font-[family-name:var(--font-montserrat)] font-bold text-3xl md:text-5xl text-white mt-4 mb-6">
-            O que podemos criar
-            <span className="text-[#F57C00]"> juntos.</span>
+            Serviços Especializados de <span className="text-[#F57C00]">Impressão 3D.</span>
           </h2>
           <p className="text-[#A0A0A0] text-lg max-w-2xl mx-auto">
             De protótipos para validação até peças finais com acabamento premium.
