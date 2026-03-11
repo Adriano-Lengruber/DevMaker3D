@@ -18,6 +18,7 @@ const footerLinks = {
     'Sobre Nós',
     'Processo',
     'Portfólio',
+    'Marketplace',
     'Nexus de Engenharia',
     'Contato',
     'Trabalhe Conosco',
@@ -112,7 +113,7 @@ export default function Footer() {
               {footerLinks.company.map((link) => (
                 <li key={link}>
                   <Link
-                    href={link === 'Nexus de Engenharia' ? '/blog' : '#'}
+                    href={link === 'Nexus de Engenharia' ? '/blog' : link === 'Marketplace' ? '/marketplace' : '#'}
                     className="text-[#A0A0A0] hover:text-[#F57C00] transition-colors text-sm"
                   >
                     {link}

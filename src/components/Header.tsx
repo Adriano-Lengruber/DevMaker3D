@@ -2,24 +2,27 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown, Rocket, Cpu, Newspaper, ShoppingBag, Info, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession, signOut, signIn } from 'next-auth/react';
 
-const navItems = [
-  { name: 'Sobre', href: '#philosophy' },
-  { name: 'Processo', href: '#process' },
-  { name: 'Serviços', href: '#services' },
-  { name: 'Materiais', href: '#materials' },
-  { name: 'Nexus Engine', href: '#nexus-engine' },
-  { name: 'Portfólio', href: '#portfolio' },
-  { name: 'Nexus de Engenharia', href: '/blog' },
-  { name: 'Contato', href: '#contact' },
+const nexusHubItems = [
+  { name: 'Nexus Engine', href: '/#nexus-engine', icon: Cpu, description: 'Análise de blueprints STL' },
+  { name: 'Nexus de Engenharia', href: '/blog', icon: Newspaper, description: 'Log técnico e tutoriais' },
+];
+
+const companyItems = [
+  { name: 'Sobre Nós', href: '/#philosophy', icon: Info },
+  { name: 'Processo', href: '/#process', icon: ShieldCheck },
+  { name: 'Serviços', href: '/#services', icon: Rocket },
 ];
 
 export default function Header() {
+  const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -31,6 +34,50 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const Dropdown = ({ title, items, id }: { title: string, items: any[], id: string }) => (
+    <div 
+      className="relative group"
+      onMouseEnter={() => setActiveDropdown(id)}
+      onMouseLeave={() => setActiveDropdown(null)}
+    >
+      <button className="flex items-center gap-1 text-sm text-[#A0A0A0] hover:text-white transition-colors py-2">
+        {title}
+        <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${activeDropdown === id ? 'rotate-180' : ''}`} />
+      </button>
+      
+      <AnimatePresence>
+        {activeDropdown === id && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute top-full left-1/2 -translate-x-1/2 w-64 pt-4"
+          >
+            <div className="glass rounded-2xl border border-[#333333] p-4 shadow-2xl">
+              <div className="space-y-1">
+                {items.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group/item"
+                  >
+                    <item.icon className="w-5 h-5 text-[#F57C00] mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-white">{item.name}</p>
+                      {item.description && (
+                         <p className="text-[10px] text-gray-500 leading-tight mt-0.5">{item.description}</p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -41,15 +88,12 @@ export default function Header() {
       }`}
     >
       {!isMounted ? (
-        // Skeleton para evitar hydration mismatch
         <div className="container-custom flex items-center justify-between">
-          <div className="h-8 md:h-9 w-auto bg-[#333] rounded animate-pulse" />
-          <nav className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <div key={item.name} className="h-4 w-16 bg-[#333] rounded animate-pulse" />
-            ))}
-          </nav>
-          <div className="hidden lg:block h-10 w-32 bg-[#333] rounded animate-pulse" />
+          <div className="h-8 md:h-9 w-32 bg-[#333] rounded animate-pulse" />
+          <div className="hidden lg:flex gap-8">
+            {[1, 2, 3, 4].map(i => <div key={i} className="h-4 w-16 bg-[#333] rounded animate-pulse" />)}
+          </div>
+          <div className="h-10 w-32 bg-[#333] rounded animate-pulse" />
         </div>
       ) : (
         <div className="container-custom flex items-center justify-between">
@@ -66,26 +110,50 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-8">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-sm text-[#A0A0A0] hover:text-white transition-colors relative group whitespace-nowrap"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#F57C00] transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
+            <Dropdown title="Nexus Hub" items={nexusHubItems} id="nexus" />
+            
+            <Link href="/marketplace" className="flex items-center gap-2 text-sm text-[#A0A0A0] hover:text-white transition-colors relative group">
+              <ShoppingBag className="w-4 h-4 text-[#F57C00]" />
+              Marketplace
+              <span className="absolute -top-1 -right-4 px-1 bg-[#F57C00] text-[8px] font-bold text-white rounded">NEW</span>
+            </Link>
+
+            <Dropdown title="Empresa" items={companyItems} id="company" />
+            
+            <Link href="/#portfolio" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
+              Portfólio
+            </Link>
+
+            <Link href="/#contact" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
+              Contato
+            </Link>
           </nav>
 
-          {/* CTA Button */}
-          <a
-            href="#contact"
-            className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-[#F57C00] text-white font-medium rounded text-sm hover:bg-[#FF9500] transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,124,0,0.4)] whitespace-nowrap"
-          >
-            Solicitar Orçamento
-          </a>
+          {/* Auth/CTA Section */}
+          <div className="hidden lg:flex items-center gap-4">
+            {session ? (
+              <div className="flex items-center gap-4 border-l border-[#333333] pl-4">
+                 <div className="text-right">
+                    <p className="text-[10px] text-gray-500 uppercase font-mono">Operator</p>
+                    <p className="text-xs font-bold text-white">{session.user?.name}</p>
+                 </div>
+                 <button 
+                   onClick={() => signOut()}
+                   className="w-8 h-8 rounded-full border border-[#333333] bg-[#1A1A1A] flex items-center justify-center hover:border-red-500/50 transition-colors group"
+                 >
+                    <X className="w-4 h-4 text-gray-500 group-hover:text-red-500 transition-colors" />
+                 </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => signIn()}
+                className="px-5 py-2.5 bg-[#F57C00] text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-[#FF8C00] transition-all hover:shadow-[0_0_20px_rgba(245,124,0,0.3)]"
+              >
+                Inicia Identidade
+              </button>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -98,38 +166,58 @@ export default function Header() {
       )}
 
       {/* Mobile Menu */}
-      {isMounted && (
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden glass border-t border-[#333333]"
-            >
-              <nav className="flex flex-col py-4 container-custom">
-                {navItems.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="py-3 text-[#A0A0A0] hover:text-white transition-colors border-b border-[#333333] last:border-0"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-                <a
-                  href="#contact"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden glass border-t border-[#333333] overflow-hidden"
+          >
+            <nav className="flex flex-col py-6 container-custom gap-4">
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest px-2">Ecosystem</p>
+              {[...nexusHubItems, ...companyItems].map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="mt-4 py-3 bg-[#F57C00] text-white font-medium rounded text-center"
+                  className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5"
                 >
-                  Solicitar Orçamento
-                </a>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
+                  <item.icon className="w-5 h-5 text-[#F57C00]" />
+                  <span className="text-sm font-medium">{item.name}</span>
+                </Link>
+              ))}
+              
+              <Link
+                href="/marketplace"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 text-white bg-[#F57C00]/20 rounded-xl border border-[#F57C00]/30"
+              >
+                <ShoppingBag className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-bold">Marketplace</span>
+              </Link>
+
+              <div className="mt-4 pt-4 border-t border-[#333333]">
+                {!session ? (
+                  <button 
+                    onClick={() => signIn()}
+                    className="w-full py-4 bg-[#F57C00] text-white font-bold rounded-xl text-xs uppercase tracking-widest"
+                  >
+                    Identificar
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => signOut()}
+                    className="w-full py-4 bg-[#1A1A1A] text-gray-400 border border-[#333333] font-bold rounded-xl text-xs uppercase tracking-widest"
+                  >
+                    Desconectar
+                  </button>
+                )}
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

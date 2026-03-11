@@ -2,13 +2,15 @@
 
 import { useState, useRef, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Box, Cpu, Activity, Info, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
+import { Upload, Box, Cpu, Activity, Info, AlertCircle, FileText, CheckCircle2, Lock } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Center, Environment, Stage } from '@react-three/drei';
 import * as THREE from 'three';
 import { STLLoader } from 'three-stdlib';
+import { useSession, signIn } from 'next-auth/react';
 
 const DENSITIES = {
+// ... existing densities remain same
   'PLA': 1.24,
   'PETG': 1.27,
   'ABS': 1.04,
@@ -42,6 +44,7 @@ function ModelPreview({ geometry }: { geometry: THREE.BufferGeometry }) {
 }
 
 export default function NexusEngine() {
+  const { data: session } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
   const [stats, setStats] = useState<{
@@ -55,6 +58,7 @@ export default function NexusEngine() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const calculateVolume = (geom: THREE.BufferGeometry) => {
+    // ... logic remains same
     let volume = 0;
     const position = geom.attributes.position;
     const faces = position.count / 3;
@@ -66,7 +70,7 @@ export default function NexusEngine() {
       volume += (v1.x * v2.y * v3.z + v1.y * v2.z * v3.x + v1.z * v2.x * v3.y - 
                  v1.z * v2.y * v3.x - v1.y * v2.x * v3.z - v1.x * v2.z * v3.y);
     }
-    return Math.abs(volume) / 6000; // Result in cm3 (assuming mm units in STL)
+    return Math.abs(volume) / 6000;
   };
 
   const calculateDimensions = (geom: THREE.BufferGeometry) => {
@@ -81,24 +85,26 @@ export default function NexusEngine() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent) => {
     e.preventDefault();
+    if (!session) return; // Block guest uploads
     setIsDragging(false);
     
     let uploadedFile: File | undefined;
-    if ('files' in e.target && e.target.files) {
+    if ('target' in e && 'files' in e.target && e.target.files) {
       uploadedFile = e.target.files[0];
     } else if ('dataTransfer' in e && e.dataTransfer.files) {
-      uploadedFile = e.dataTransfer.files[0];
+      uploadedFile = (e as React.DragEvent).dataTransfer.files[0];
     }
 
     if (uploadedFile && uploadedFile.name.toLowerCase().endsWith('.stl')) {
       setFile(uploadedFile);
       analyzeFile(uploadedFile);
-    } else {
+    } else if (uploadedFile) {
       setStatus('error');
     }
   };
 
   const analyzeFile = (file: File) => {
+    if (!session) return;
     setStatus('analyzing');
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -120,7 +126,7 @@ export default function NexusEngine() {
   };
 
   const weight = stats ? stats.volume * DENSITIES[stats.material] : 0;
-  const estimatedPrice = stats ? (weight * PRICE_PER_GRAM) + 15 : 0; // Base fee + material
+  const estimatedPrice = stats ? (weight * PRICE_PER_GRAM) + 15 : 0;
 
   return (
     <section id="nexus-engine" className="py-24 bg-[#0F0F0F] relative overflow-hidden">
@@ -133,7 +139,7 @@ export default function NexusEngine() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#333333] bg-[#1A1A1A] mb-4"
           >
             <Cpu className="w-4 h-4 text-[#F57C00]" />
-            <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#A0A0A0]">Nexus Engine v1.0.4</span>
+            <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#A0A0A0]">Nexus Engine v1.1.0</span>
           </motion.div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 uppercase tracking-tight">
             Análise <span className="text-[#F57C00]">Neural</span> do Projeto
@@ -148,15 +154,37 @@ export default function NexusEngine() {
           {/* Upload Area */}
           <div className="space-y-8">
             <div 
-              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragOver={(e) => { e.preventDefault(); if(session) setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleFileUpload}
               className={`relative h-[400px] glass rounded-3xl border-2 border-dashed transition-all duration-500 flex flex-col items-center justify-center p-8 group ${
+                !session ? 'border-[#333333]' :
                 isDragging ? 'border-[#F57C00] bg-[#F57C00]/5 scale-[0.98]' : 'border-[#333333] hover:border-[#F57C00]/50'
               }`}
             >
-              <AnimatePresence mode="wait">
-                {status === 'idle' || status === 'error' ? (
+              {!session ? (
+                 <motion.div 
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   className="text-center p-6"
+                 >
+                    <div className="w-16 h-16 rounded-2xl bg-[#1A1A1A] border border-[#333333] flex items-center justify-center mb-6 mx-auto">
+                       <Lock className="w-6 h-6 text-gray-500" />
+                    </div>
+                    <h4 className="text-white font-bold uppercase tracking-widest mb-3">Sincronização Bloqueada</h4>
+                    <p className="text-gray-500 text-sm mb-8 max-w-[280px] mx-auto">
+                       Acesse o Nexus Engine através de uma identidade válida para realizar a síntese de blueprints.
+                    </p>
+                    <button 
+                      onClick={() => signIn()}
+                      className="px-8 py-3 bg-[#F57C00] text-white rounded-xl font-bold text-xs uppercase tracking-widest blog-glow-orange hover:bg-[#FF8C00] transition-all"
+                    >
+                      Initialize Identity
+                    </button>
+                 </motion.div>
+              ) : (
+                <AnimatePresence mode="wait">
+                  {status === 'idle' || status === 'error' ? (
                   <motion.div
                     key="idle"
                     initial={{ opacity: 0 }}
@@ -238,6 +266,7 @@ export default function NexusEngine() {
                   </motion.div>
                 )}
               </AnimatePresence>
+            )}
             </div>
 
             {/* Price Alert */}
