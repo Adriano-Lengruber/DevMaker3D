@@ -21,7 +21,10 @@ const ThreeBackground = dynamic(() => import('./ThreeBackground'), {
 
 export default function Hero() {
   return (
-    <section data-testid="hero-section" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section 
+      data-testid="hero-section" 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden [will-change:transform]"
+    >
       {/* Particle Background */}
       <ParticleBackground />
 

@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Layers, Mail, Phone, MapPin, Instagram, Linkedin, Github } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const footerLinks = {
   services: [
@@ -16,6 +18,7 @@ const footerLinks = {
     'Sobre Nós',
     'Processo',
     'Portfólio',
+    'Nexus de Engenharia',
     'Contato',
     'Trabalhe Conosco',
   ],
@@ -45,13 +48,15 @@ export default function Footer() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <a href="#" className="flex items-center gap-2 mb-4">
-                <img
+              <Link href="/" className="flex items-center gap-2 mb-4">
+                <Image
                   src="/Logo White.svg"
                   alt="DevMaker3D"
+                  width={140}
+                  height={32}
                   className="h-7.5 md:h-9 w-auto"
                 />
-              </a>
+              </Link>
               <p className="text-[#A0A0A0] mb-6 max-w-sm">
                 Tecnologia com alma. Transformamos ideias abstratas em objetos tangíveis
                 com rigor de engenharia e alma de artista.
@@ -106,12 +111,12 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link}>
-                  <a
-                    href="#"
+                  <Link
+                    href={link === 'Nexus de Engenharia' ? '/blog' : '#'}
                     className="text-[#A0A0A0] hover:text-[#F57C00] transition-colors text-sm"
                   >
                     {link}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

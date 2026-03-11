@@ -3,14 +3,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const navItems = [
   { name: 'Sobre', href: '#philosophy' },
   { name: 'Processo', href: '#process' },
   { name: 'Serviços', href: '#services' },
   { name: 'Materiais', href: '#materials' },
+  { name: 'Nexus Engine', href: '#nexus-engine' },
   { name: 'Portfólio', href: '#portfolio' },
-  { name: 'Blog', href: '/blog' },
+  { name: 'Nexus de Engenharia', href: '/blog' },
   { name: 'Contato', href: '#contact' },
 ];
 
@@ -51,13 +54,16 @@ export default function Header() {
       ) : (
         <div className="container-custom flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <img
+          <Link href="/" className="flex items-center gap-2 group">
+            <Image
               src="/Logo White.svg"
               alt="DevMaker3D"
+              width={160}
+              height={36}
               className="h-8 md:h-9 w-auto"
+              priority
             />
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-4 xl:gap-8">

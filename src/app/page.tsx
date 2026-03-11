@@ -4,6 +4,7 @@ import Philosophy from '@/components/Philosophy';
 import Process from '@/components/Process';
 import Services from '@/components/Services';
 import Materials from '@/components/Materials';
+import NexusEngine from '@/components/NexusEngine';
 import Portfolio from '@/components/Portfolio';
 import Testimonials from '@/components/Testimonials';
 import ContactCTA from '@/components/ContactCTA';
@@ -18,6 +19,7 @@ export default function Home() {
       <Process />
       <Services />
       <Materials />
+      <NexusEngine />
       <Portfolio />
       <Testimonials />
       <ContactCTA />
