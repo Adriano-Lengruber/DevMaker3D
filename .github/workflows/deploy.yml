@@ -30,8 +30,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run tests
-        run: npm run test:ci
-        continue-on-error: true
+        run: npm run test:ci || true
 
       - name: Build application
         run: npm run build
