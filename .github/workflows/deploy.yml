@@ -54,8 +54,9 @@ jobs:
             # Pull latest changes
             git pull origin main
             
-            # Stop current container
-            docker compose down || true
+            # Stop and remove current container
+            docker compose down --remove-orphans || true
+            docker rm -f devmaker3d || true
             
             # Build and start
             docker compose build --no-cache
