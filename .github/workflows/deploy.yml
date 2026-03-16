@@ -66,11 +66,11 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/devmaker3d
+            cd /home/adriano/devmaker3d
             
             # Backup current version
             timestamp=$(date +%Y%m%d_%H%M%S)
-            cp -r .env .env.backup_$timestamp 2>/dev/null || true
+            cp .env .env.backup_$timestamp 2>/dev/null || true
             
             # Pull latest changes
             git pull origin main
@@ -78,7 +78,7 @@ jobs:
             # Stop current container
             docker compose down || true
             
-            # Rebuild and start
+            # Build and start
             docker compose build --no-cache
             docker compose up -d
             
