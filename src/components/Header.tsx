@@ -148,7 +148,7 @@ export default function Header() {
                 onClick={() => signIn()}
                 className="px-5 py-2.5 bg-[#F57C00] text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-[#FF8C00] transition-all hover:shadow-[0_0_20px_rgba(245,124,0,0.3)]"
               >
-                Entrar
+                Orçamento
               </button>
             )}
           </div>
@@ -206,7 +206,7 @@ export default function Header() {
                     onClick={() => signIn()}
                     className="w-full py-4 bg-[#F57C00] text-white font-bold rounded-xl text-xs uppercase tracking-widest"
                   >
-                    Entrar
+                    Orçamento
                   </button>
                 ) : (
                   <button 
