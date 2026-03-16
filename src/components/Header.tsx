@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Rocket, Cpu, Newspaper, ShoppingBag, Info, ShieldCheck } from 'lucide-react';
+import { Menu, X, ChevronDown, Rocket, Cpu, Newspaper, Info, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut, signIn } from 'next-auth/react';
@@ -10,12 +10,6 @@ import { useSession, signOut, signIn } from 'next-auth/react';
 const nexusHubItems = [
   { name: 'Nexus Engine', href: '/#nexus-engine', icon: Cpu, description: 'Análise de blueprints STL' },
   { name: 'Nexus de Engenharia', href: '/blog', icon: Newspaper, description: 'Log técnico e tutoriais' },
-];
-
-const companyItems = [
-  { name: 'Sobre Nós', href: '/#philosophy', icon: Info },
-  { name: 'Processo', href: '/#process', icon: ShieldCheck },
-  { name: 'Serviços', href: '/#services', icon: Rocket },
 ];
 
 export default function Header() {
@@ -113,13 +107,17 @@ export default function Header() {
           <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
             <Dropdown title="Nexus Hub" items={nexusHubItems} id="nexus" />
             
-            <Link href="/marketplace" className="flex items-center gap-2 text-sm text-[#A0A0A0] hover:text-white transition-colors relative group">
-              <ShoppingBag className="w-4 h-4 text-[#F57C00]" />
-              Marketplace
-              <span className="absolute -top-1 -right-4 px-1 bg-[#F57C00] text-[8px] font-bold text-white rounded">NEW</span>
+            <Link href="/#philosophy" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
+              Sobre
             </Link>
-
-            <Dropdown title="Empresa" items={companyItems} id="company" />
+            
+            <Link href="/#process" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
+              Processo
+            </Link>
+            
+            <Link href="/#services" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
+              Serviços
+            </Link>
             
             <Link href="/#portfolio" className="text-sm text-[#A0A0A0] hover:text-white transition-colors">
               Portfólio
@@ -175,26 +173,31 @@ export default function Header() {
             className="lg:hidden glass border-t border-[#333333] overflow-hidden"
           >
             <nav className="flex flex-col py-6 container-custom gap-4">
-              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest px-2">Ecosystem</p>
-              {[...nexusHubItems, ...companyItems].map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5"
-                >
-                  <item.icon className="w-5 h-5 text-[#F57C00]" />
-                  <span className="text-sm font-medium">{item.name}</span>
-                </Link>
-              ))}
+              <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest px-2">Navegação</p>
               
-              <Link
-                href="/marketplace"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-3 p-3 text-white bg-[#F57C00]/20 rounded-xl border border-[#F57C00]/30"
-              >
-                <ShoppingBag className="w-5 h-5 text-[#F57C00]" />
-                <span className="text-sm font-bold">Marketplace</span>
+              <Link href="/#philosophy" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5">
+                <Info className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-medium">Sobre Nós</span>
+              </Link>
+
+              <Link href="/#process" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5">
+                <ShieldCheck className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-medium">Processo</span>
+              </Link>
+
+              <Link href="/#services" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5">
+                <Rocket className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-medium">Serviços</span>
+              </Link>
+              
+              <Link href="/#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5">
+                <Rocket className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-medium">Portfólio</span>
+              </Link>
+
+              <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 p-3 text-[#A0A0A0] hover:text-white transition-colors bg-white/5 rounded-xl border border-white/5">
+                <Rocket className="w-5 h-5 text-[#F57C00]" />
+                <span className="text-sm font-medium">Contato</span>
               </Link>
 
               <div className="mt-4 pt-4 border-t border-[#333333]">

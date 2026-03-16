@@ -15,54 +15,65 @@ Landing page profissional para a **DevMaker3D**, empresa especializada em impres
 - **Responsividade Total**: Otimizada para desktop, tablet e mobile
 - **Performance Otimizada**: Core Web Vitals otimizados com Next.js 14
 - **SEO Avançado**: Meta tags dinâmicas, schema markup e sitemap automático
-- **Animações Suaves**: Framer Motion para transições fluidas
+- **Animações Suaves**: Framer Motion e Three.js para transições fluidas
 - **Formulários Inteligentes**: Validação client-side e server-side
-- **Analytics Integrado**: Google Analytics 4 e event tracking
+- **Blog Integrado**: Sistema completo de blog com painel administrativo
+- **Dashboard de Usuário**: Área restrita para clientes gerenciarem seus projetos
+- **Autenticação**: Sistema de login com NextAuth.js
 
 ## 🚀 Tecnologias Utilizadas
 
 ### Frontend
 - [Next.js 14](https://nextjs.org/) - Framework React com App Router
-- [React 19](https://react.dev/) - Biblioteca de UI
+- [React 18](https://react.dev/) - Biblioteca de UI
 - [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript com tipos
-- [Tailwind CSS v4](https://tailwindcss.com/) - Framework CSS utilitário
+- [Tailwind CSS v3](https://tailwindcss.com/) - Framework CSS utilitário
 - [Framer Motion](https://www.framer.com/motion/) - Biblioteca de animações
+- [Three.js](https://threejs.org/) - Gráficos 3D
+- [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) - React para Three.js
 - [Lucide React](https://lucide.dev/) - Ícones SVG otimizados
+- [Tiptap](https://tiptap.dev/) - Editor Rich Text
 
-### Backend & APIs
+### Backend & Databases
 - [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction) - Rotas de API integradas
-- [Resend](https://resend.com/) - Serviço de email transacional
+- [Prisma](https://prisma.io/) - ORM para SQLite
+- [NextAuth.js](https://next-auth.js.org/) - Autenticação
 - [Zod](https://zod.dev/) - Validação de esquemas TypeScript
+- [Resend](https://resend.com/) - Serviço de email transacional
 
 ### Desenvolvimento & Deploy
-- [pnpm](https://pnpm.io/) - Gerenciador de pacotes rápido e eficiente
+- [npm](https://www.npmjs.com/) - Gerenciador de pacotes
 - [ESLint](https://eslint.org/) - Linting de código
-- [Prettier](https://prettier.io/) - Formatação de código
-- [Vercel](https://vercel.com/) - Plataforma de deploy com edge functions
-- [Docker](https://www.docker.com/) - Containerização para desenvolvimento
+- [Jest](https://jestjs.io/) - Testes automatizados
+- [Docker](https://www.docker.com/) - Containerização
+- [GitHub Actions](https://github.com/features/actions) - CI/CD
 
 ## 📦 Instalação e Configuração
 
 ### Pré-requisitos
 - Node.js >= 20.0.0
-- pnpm >= 8.0.0
+- npm >= 10.0.0
 - Git >= 2.40.0
+- Docker (opcional)
 
 ### Instalação Rápida
 
 ```bash
 # Clone o repositório
-git clone https://github.com/Adriano-Lengruber/DevMaker3D_02_26.git
-cd DevMaker3D_02_26/devmaker3d-website
+git clone https://github.com/Adriano-Lengruber/DevMaker3D.git
+cd DevMaker3D
 
 # Instale as dependências
-pnpm install
+npm install
 
 # Configure as variáveis de ambiente
-cp .env.example .env.local
+cp .env.example .env
+
+# Gere o Prisma Client
+npx prisma generate
 
 # Execute o servidor de desenvolvimento
-pnpm dev
+npm run dev
 ```
 
 Acesse: [http://localhost:3000](http://localhost:3000)
@@ -70,207 +81,159 @@ Acesse: [http://localhost:3000](http://localhost:3000)
 ### Desenvolvimento com Docker
 
 ```bash
-# Build e inicie o container de desenvolvimento
-docker-compose up -d devmaker3d-dev
+# Iniciar container de desenvolvimento
+docker-compose -f docker-compose.dev.yml up --build
 
-# Execute testes
-docker-compose --profile testing run --rm devmaker3d-test
-
-# Parar containers
-docker-compose down
+# Acesse em http://localhost:3000
 ```
 
 ## 🔧 Configuração de Variáveis de Ambiente
 
-Copie o arquivo `.env.example` para `.env.local` e configure as variáveis:
-
 ```bash
+# Database
+DATABASE_URL="file:./dev.db"
+
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_NAME=DevMaker3D
 
+# Auth (NextAuth)
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=sua_chave_secreta_aqui
+
 # Email Configuration (Resend)
-RESEND_API_KEY=your_resend_api_key_here
+RESEND_API_KEY=re_123456789
 RESEND_FROM_EMAIL=contato@devmaker3d.com.br
 
 # Analytics (Optional)
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-
-# Social Media
-NEXT_PUBLIC_INSTAGRAM_URL=https://instagram.com/devmaker3d
-NEXT_PUBLIC_WHATSAPP_NUMBER=5522999999999
 ```
 
-## 🏗️ Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```
-devmaker3d-website/
+devmaker3d/
 ├── src/
 │   ├── app/                    # App Router do Next.js
-│   │   ├── layout.tsx          # Layout raiz com providers
-│   │   ├── page.tsx            # Página principal
-│   │   ├── globals.css         # Estilos globais
-│   │   └── api/                # Rotas de API
-│   ├── components/             # Componentes React
-│   │   ├── sections/           # Seções da landing page
-│   │   ├── ui/                 # Componentes de UI (shadcn/ui)
-│   │   ├── forms/              # Componentes de formulário
-│   │   └── shared/             # Componentes compartilhados
-│   ├── hooks/                  # Custom hooks
-│   ├── lib/                    # Utilitários e configurações
-│   └── types/                  # Tipos TypeScript
-├── public/                     # Assets estáticos
-├── tests/                      # Testes automatizados
-├── docker/                     # Configurações Docker
-└── scripts/                    # Scripts de automação
+│   │   ├── api/               # Rotas de API
+│   │   ├── auth/              # Páginas de autenticação
+│   │   ├── blog/              # Blog e admin
+│   │   ├── dashboard/         # Dashboard do usuário
+│   │   └── page.tsx           # Página principal
+│   ├── components/            # Componentes React
+│   │   ├── ui/               # Componentes base
+│   │   ├── blog/             # Componentes do blog
+│   │   └── forms/            # Formulários
+│   ├── lib/                  # Utilitários
+│   └── types/                # Tipos TypeScript
+├── prisma/                   # Schema do banco de dados
+├── public/                   # Assets estáticos
+├── .github/workflows/        # GitHub Actions
+└── docker-compose*.yml       # Configurações Docker
+```
+
+## 🚀 Deploy
+
+### Deploy Automático com GitHub Actions
+
+1. Configure as secrets no GitHub:
+   - `VPS_HOST`: Endereço IP da VPS
+   - `VPS_USER`: Usuário SSH
+   - `VPS_SSH_KEY`: Chave privada SSH
+   - `DATABASE_URL`: URL do banco de dados
+
+2. Execute o script de setup:
+```bash
+./setup-github-secrets.sh
+```
+
+3. Faça push para a branch main:
+```bash
+git add .
+git commit -m "feat: descrição"
+git push origin main
+```
+
+O deploy será automático! 🎉
+
+### Deploy Manual na VPS
+
+```bash
+# Clone na VPS
+git clone https://github.com/Adriano-Lengruber/DevMaker3D.git /var/www/devmaker3d
+cd /var/www/devmaker3d
+
+# Configure variáveis de ambiente
+cp .env.example .env
+
+# Inicie com Docker
+docker-compose up -d
 ```
 
 ## 🧪 Testes
 
 ```bash
 # Executar todos os testes
-pnpm test
+npm run test
 
 # Executar testes em modo watch
-pnpm test:watch
+npm run test:watch
 
 # Executar testes com coverage
-pnpm test:coverage
+npm run test:coverage
 
-# Executar testes E2E
-pnpm test:e2e
+# Executar testes CI
+npm run test:ci
 ```
 
-## 🚀 Deploy
+## 📋 Scripts Disponíveis
 
-### Deploy na Vercel (Recomendado)
+| Comando | Descrição |
+|---------|-----------|
+| `npm run dev` | Iniciar servidor de desenvolvimento |
+| `npm run build` | Build de produção |
+| `npm run start` | Iniciar servidor de produção |
+| `npm run lint` | Verificar código |
+| `npm run test` | Executar testes |
+| `npm run db:generate` | Gerar Prisma Client |
+| `npm run db:push` | Atualizar banco de dados |
+| `npm run db:seed` | Popular banco com dados iniciais |
 
-1. Conecte seu repositório GitHub na Vercel
-2. Configure as variáveis de ambiente
-3. Deploy automático a cada push na branch main
+## 🎯 Funcionalidades
 
-### Deploy Manual
+### Landing Page
+- Hero com animações 3D
+- Filosofia da empresa
+- Processo de impressão 3D
+- Serviços oferecidos
+- Materiais disponíveis
+- Portfólio de projetos
+- Depoimentos de clientes
+- Formulário de contato
 
-```bash
-# Build de produção
-pnpm build
+### Blog
+- Listagem de artigos
+- Artigos individuais
+- Comentários
+- Reações (likes)
+- Painel administrativo
+- Editor Rich Text
 
-# Inicie o servidor de produção
-pnpm start
-```
+### Dashboard
+- Área do cliente
+- Gerenciamento de projetos
+- Status de pedidos
 
-### Deploy com Docker
-
-```bash
-# Build da imagem de produção
-docker build -f docker/Dockerfile.prod -t devmaker3d:latest .
-
-# Execute o container
-docker run -p 3000:3000 --env-file .env.local devmaker3d:latest
-```
-
-## 📊 Performance & SEO
-
-### Core Web Vitals
-- **LCP (Largest Contentful Paint)**: < 2.5s
-- **FID (First Input Delay)**: < 100ms
-- **CLS (Cumulative Layout Shift)**: < 0.1
-
-### SEO Features
-- Meta tags dinâmicas para cada página
-- Schema markup para rich snippets
-- Sitemap.xml automático
-- Robots.txt otimizado
-- Open Graph tags para redes sociais
-- Twitter Cards
-
-### Otimizações
-- Images otimizadas com Next.js Image
-- Lazy loading de componentes pesados
-- Code splitting automático
-- Fontes otimizadas com next/font
-- CSS minificado e comprimido
-
-## 🔒 Segurança
-
-- Headers de segurança configurados
-- Validação de inputs com Zod
-- Proteção contra XSS
-- Rate limiting em formulários
-- HTTPS enforcement
-
-## 📈 Analytics & Monitoramento
-
-- Google Analytics 4 integrado
-- Event tracking personalizado
-- Monitoramento de erros com Sentry
-- Performance monitoring com Vercel Analytics
-- Uptime monitoring
-
-## 🎯 Features do Negócio
-
-### Seções Principais
-1. **Hero Section**: Apresentação impactante com animações
-2. **Philosophy**: Conceito "Técnica com alma"
-3. **Process**: Etapas do processo de impressão 3D
-4. **Services**: Serviços oferecidos
-5. **Materials**: Materiais disponíveis
-6. **Portfolio**: Galeria de projetos realizados
-7. **Testimonials**: Depoimentos de clientes
-8. **Contact**: Formulário de contato e informações
-
-### Funcionalidades de Lead Generation
-- Formulário de contato inteligente
-- Captura de leads com validação
-- Integração com email marketing
-- Notificações em tempo real
-- Sistema de orçamento online (em desenvolvimento)
-
-## 🔄 CI/CD Pipeline
-
-O projeto utiliza GitHub Actions para:
-- Testes automatizados a cada push
-- Linting e type checking
-- Build verification
-- Deploy automático para Vercel
-- Notificações de status
-
-## 📝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 🐛 Reportando Bugs
-
-Reporte bugs através das [Issues do GitHub](https://github.com/Adriano-Lengruber/DevMaker3D_02_26/issues).
-
-## 📄 Licença
-
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 👥 Autor
-
-**Adriano Lengruber**
-- LinkedIn: [linkedin.com/in/adrianolengruber](https://linkedin.com/in/adrianolengruber)
-- GitHub: [@Adriano-Lengruber](https://github.com/Adriano-Lengruber)
-
-## 🙏 Agradecimentos
-
-- Next.js team pela excelente framework
-- Tailwind CSS pela produtividade no CSS
-- Framer Motion pelas animações fluidas
-- Comunidade open source pelos componentes e ícones
-
----
+### Autenticação
+- Login/Registro
+- Integração com NextAuth.js
+- Sessões seguras
 
 ## 📞 Suporte
 
 Para suporte, envie um email para: adriano@devmaker3d.com.br
 
-**Site Oficial**: [https://devmaker3d.com.br](https://devmaker3d.com.br)
+**Site Oficial**: [https://devmaker3d.adriano-lengruber.com](https://devmaker3d.adriano-lengruber.com)
 
 ---
 

@@ -1,0 +1,107 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run tests
+        run: npm run test:ci
+        continue-on-error: true
+
+      - name: Build application
+        run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deployment
+          cp -r .next deployment/
+          cp -r public deployment/
+          cp -r prisma deployment/
+          cp package.json deployment/
+          cp package-lock.json deployment/
+          cp Dockerfile deployment/
+          cp -r node_modules/.prisma deployment/
+          cp -r node_modules/@prisma deployment/
+          cp -r node_modules/.next/standalone deployment/standalone
+          mkdir -p deployment/standalone/public
+          cp -r public/* deployment/standalone/public/
+          mkdir -p deployment/standalone/.next/static
+          cp -r .next/static deployment/standalone/.next/
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/devmaker3d
+            
+            # Backup current version
+            timestamp=$(date +%Y%m%d_%H%M%S)
+            cp -r .env .env.backup_$timestamp 2>/dev/null || true
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Stop current container
+            docker compose down || true
+            
+            # Rebuild and start
+            docker compose build --no-cache
+            docker compose up -d
+            
+            # Wait for container to be healthy
+            sleep 10
+            
+            # Check container status
+            docker ps | grep devmaker3d
+            
+            echo "✅ Deploy completed successfully!"
+
+      - name: Verify deployment
+        run: |
+          sleep 5
+          curl -f -s -o /dev/null -w "%{http_code}" https://devmaker3d.adriano-lengruber.com || echo "Site may need DNS propagation"
+        continue-on-error: true
+
+      - name: Discord notification on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true

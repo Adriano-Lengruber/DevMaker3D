@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  devmaker3d-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devmaker3d-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=3000
+      - DATABASE_URL=file:./dev.db
+    volumes:
+      - ./prisma:/app/prisma
+      - ./src:/app/src
+    command: sh -c "npx prisma generate && npm run dev"
+    restart: unless-stopped
+    networks:
+      - devmaker3d-network
+
+networks:
+  devmaker3d-network:
+    driver: bridge
