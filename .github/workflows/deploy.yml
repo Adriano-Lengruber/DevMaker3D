@@ -82,6 +82,9 @@ jobs:
             docker compose build --no-cache
             docker compose up -d
             
+            # Conectar à rede do Nginx Proxy Manager
+            docker network connect nginx-proxy_default devmaker3d || true
+            
             # Wait for container to be healthy
             sleep 10
             
