@@ -9,6 +9,9 @@ COPY package.json ./
 # Instala dependências
 RUN npm install --legacy-peer-deps
 
+# Gera Prisma Client
+RUN npx prisma generate
+
 # Copia restante do projeto
 COPY . .
 
