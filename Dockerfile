@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copia dependências
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Instala dependências
 RUN npm install --legacy-peer-deps
